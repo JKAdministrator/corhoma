@@ -1,0 +1,30 @@
+.application-header{
+    position: fixed;
+    top: 0px;
+    background-color: white;    
+    border-bottom: 1px solid rgba(0, 0, 0, 0.232);
+    width: 100vw;
+    min-height: 0.5rem;
+}
+.application-header nav{
+    width: calc(100% - 1rem);
+}
+.application-header ul{
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.application-header button{
+    background-color: transparent !important;
+    width: max-content;
+    color: black;
+    margin: 0;
+}
+.application-header h1 {
+    padding-left: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--theme-signafile-primary-color-h1)
+}
