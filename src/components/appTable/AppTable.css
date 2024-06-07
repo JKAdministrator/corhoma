@@ -1,0 +1,35 @@
+.app-table {
+    margin-top: 5rem;
+    margin-left: 5rem;
+    width: max-content;
+    height: max-content;
+    border: 1px solid rgba(0, 0, 0, 0.138);
+    border-radius: 3px;
+}
+.app-table table, 
+.app-table th, 
+.app-table td {
+   border-collapse: collapse;
+}
+
+.app-table caption {
+    text-align: left;
+    font-size: 1.5rem;
+    padding-left: 0.3rem;
+}
+.app-table thead {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    width: max-content;
+    height: max-content;
+}
+
+.app-table thead th {
+    padding: 0.5rem;
+}
+.app-table tbody td {
+    padding: 0.5rem;
+}
+.app-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+
+}
