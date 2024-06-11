@@ -1,10 +1,27 @@
 .app-table {
-    margin-top: 5rem;
-    margin-left: 5rem;
-    width: max-content;
-    height: max-content;
+    width: 100%;
+    height: 100%;
     border: 1px solid rgba(0, 0, 0, 0.138);
     border-radius: 3px;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.app-table h1{
+    margin: 0;
+    padding-left: 1.6rem;
+}
+.app-table table {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    height: calc(100% - 3rem);
 }
 .app-table table, 
 .app-table th, 
@@ -12,24 +29,82 @@
    border-collapse: collapse;
 }
 
+
 .app-table caption {
     text-align: left;
     font-size: 1.5rem;
     padding-left: 0.3rem;
 }
+.app-table thead, .app-table tbody {
+    position: relative !important;
+    width: 100%;
+}  
+
+
 .app-table thead {
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    width: max-content;
     height: max-content;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    background-color: white;
+}
+.app-table tbody {
+    overflow: auto;
 }
 
-.app-table thead th {
+
+.app-table thead th,
+.app-table tbody td
+ {
     padding: 0.5rem;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
 }
-.app-table tbody td {
-    padding: 0.5rem;
-}
-.app-table tbody tr {
+
+.app-table tr {
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-
+    display: grid;
+    grid-template-rows: max-content;
+    width: 100%;
 }
+.app-table tbody td button{
+    color: black !important;
+    background-color: transparent !important;
+}
+.app-table input[type='checkbox'] {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+.app-table button[disabled] {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+
+::-webkit-scrollbar {
+    width: 0.2rem;
+ }
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 0px;
+  }
+   
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(0, 0, 0); 
+    border-radius: 0px;
+  }
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+  }

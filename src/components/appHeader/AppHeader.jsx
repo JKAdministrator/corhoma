@@ -31,7 +31,7 @@ function AppHeader() {
       onMouseLeave={handleMouseLeaveHeader}
     >
     {
-      isHeaderVisible && 
+       
       <nav>
         <ul>
             <li id='appTitle'>
@@ -44,7 +44,7 @@ function AppHeader() {
               <button>
               <FontAwesomeIcon icon={faEllipsisVertical} />
               </button>
-              {isDropdownVisible && <DropdownMenu />}
+              { <DropdownMenu />}
             </li>
         </ul>
       </nav>

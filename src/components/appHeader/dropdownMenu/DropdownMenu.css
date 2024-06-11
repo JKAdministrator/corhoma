@@ -23,25 +23,29 @@
     transition: all linear 0.3s;
     text-wrap: nowrap;
     pointer-events: all;
-
-    width: calc(100% - 1rem);
+    width: 100%;
     display: flex;
     flex-flow: row;
     align-items: center;
     justify-content: flex-start;
     gap: 1rem;
-    padding: 0rem 1rem 0rem 0rem;
+    padding: 0rem;
 }
 
 .app-header-dropdown-menu li .image-container {
-    width: 2rem;
+    min-width: 2rem;
     height: 2rem;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .app-header-dropdown-menu li .image-container img {
     width: 100%;
     height: 100%;
-    object-fit: scale-down;
+    object-fit: cover;
     object-position: center;
 }
 
@@ -53,10 +57,16 @@
 
 .app-header-dropdown-menu li label {
     pointer-events: none;
+    width: -webkit-fill-available;
 }
 
 .app-header-dropdown-menu li.divider {
     pointer-events: none;
     width: -webkit-fill-available;
     border-bottom: 1px solid #0000002e;
+}
+
+.app-header-dropdown-menu li a {
+    width: 100%;
+    text-align: left;
 }
