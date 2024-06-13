@@ -108,3 +108,40 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #b30000; 
   }
+
+.app-table thead th button {
+    border: none;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    color: black;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.3rem;
+}
+
+.app-table thead th button:focus {
+    outline:0;
+    font-weight: bold;
+}
+.app-table thead th button.disabled{
+    opacity: 1;
+}
+.app-table thead th button.disabled > *:nth-child(2) {
+    opacity: 0;
+}
+.app-table thead th button {
+    position: relative;
+    pointer-events: all;
+}
+.app-table thead th button *:not(input){
+    pointer-events: none;
+}
+.app-table thead th button > *:nth-child(2) {
+    offset-anchor: 0;
+    position: absolute;
+    right: -1rem;
+}
