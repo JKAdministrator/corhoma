@@ -60,7 +60,20 @@ const sortRows = (rows, headers, sortColumnKey, sortColumnOrder )=>{
     return rows
 }
 
-function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, defaultSortColumnKey, defaultSortColumnOrder }) {
+const getPaginationInitialRow = (pageSize, currentPage) => {
+    return (pageSize * (currentPage -1)) // 1=>0,2=>10,3=>20 
+}
+const getPaginationLastRow = (pageSize, currentPage) => {
+    return ((pageSize * (currentPage -1)) + (pageSize -1))//1=>9,2=>19
+}
+
+const getMaxPage = (rowsLength, pageSize)=>{
+    const value = parseInt(rowsLength / pageSize);
+    rowsLength % pageSize > 0 ? value ++ : 0;
+    return value
+}
+
+function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, defaultSortColumnKey, defaultSortColumnOrder, pageSize=5 }) {
     const headersCopy = JSON.parse(JSON.stringify(headers));
     const rowsCopy = JSON.parse(JSON.stringify(rows));
 
@@ -76,6 +89,13 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
     const [allRowsSelected,setAllRowsSelected] = useState(false);
     const [sortColumnKey,setSortColumnKey] = useState(defaultSortColumnKey);
     const [sortColumnOrder,setSortColumnOrder] = useState(defaultSortColumnOrder);
+    const [paginationData,setPaginationData] = useState({
+        current: 1,
+        size: pageSize,
+        maxPage:  getMaxPage(rowsCopy.length, pageSize),
+        firstrow: getPaginationInitialRow(pageSize,1),
+        lastRow: getPaginationLastRow(pageSize,1),
+    });
 
     const isFirstRender = useRef(true);  // Usamos useRef para mantener la bandera de la primera renderización
 
@@ -131,7 +151,9 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
         })
     };
 
-    console.log('rendering',{headersState,rowsState,sortColumnKey, sortColumnOrder})
+    console.log('rendering',{headersState,rowsState,sortColumnKey, sortColumnOrder,paginationData})
+
+
     return (
         <div className='app-table'>
         {
@@ -159,8 +181,9 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
                     </thead>
                     <tbody>
                         {
-                            rowsState.map((row,rowIndex)=>{
-                                return <tr key={row.key || rowIndex } style={{gridTemplateColumns:styleTrWidth}} data-id={row.data[dataKeyIndex]}>
+                            //.filter((e,i)=>{return i >= paginationData.firstrow && i <= paginationData.lastRow})
+                            rowsState.filter((e,i)=>{return i >= paginationData.firstrow && i <= paginationData.lastRow}).map((row,rowIndex)=>{
+                                return <tr key={row.key} style={{gridTemplateColumns:styleTrWidth}} data-id={row.data[dataKeyIndex]}>
                                 {
                                     row.data.map((data, dataIndex)=>{
                                         if(dataIndex == 0 && isMultiRowSelectable){
@@ -183,9 +206,27 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
                         }
                     </tbody>
                 </table>
-                 
    
             }
+            <section>
+                <label htmlFor="pageSelector">Pagina</label>
+                <select name="pageSelector" id='pageSelector'>
+                    {
+                        [...Array(paginationData.maxPage)].map((_, i) => i + 1)
+                        .map(i => <option key={i} value={i} selected={i==0? true : false}>{i}</option>)
+                    }
+                </select>
+
+                <label htmlFor="pageSizeSelector">Registros por pagina</label>
+
+                <select name="pageSizeSelector" id='pageSizeSelector'>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="1000">100</option>
+                    <option value="ALL">Todas</option>
+                </select>
+            </section>
         </div>
     )
 }
