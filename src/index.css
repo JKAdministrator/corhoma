@@ -99,3 +99,35 @@ a {
   justify-content: center;
   gap: 1rem;
 }
+
+
+/***************************************
+animacion de loading para componentes
+****************************************/
+
+@keyframes placeHolderShimmer {
+  0%{ background-position: -1920px 0; }
+  100%{ background-position: 1920px 0; }
+}
+
+.animated-background {
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: placeHolderShimmer;
+  background: black;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1920px 1920px;
+  height: auto;
+  position: relative;
+  height: -webkit-fill-available !important;
+  width: 100% !important;
+  pointer-events: none !important;
+  cursor: progress;
+}
+
+.background-masker {
+  background: #fff;
+  position: absolute;
+}
