@@ -152,4 +152,12 @@
     justify-content: flex-end;
     width: 100%;
     gap: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.app-table section select {
+    padding: 0.2rem;
+}
+.app-table section label:nth-child(1) {
+    margin-right: auto;
 }

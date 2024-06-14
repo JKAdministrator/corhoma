@@ -4,16 +4,25 @@ import { FontAwesomeIcon  } from '@fortawesome/react-fontawesome'
 import { faSortDown, faSortUp, faSquare } from '@fortawesome/free-solid-svg-icons'
 
 export const TABLE_SORT_ORDER = {
-    ASC: 'TABLE_SORT_ORDER:ASC',
-    DESC: 'TABLE_SORT_ORDER:DESC',
+    ASC:    'TABLE_SORT_ORDER:ASC',
+    DESC:   'TABLE_SORT_ORDER:DESC',
 }
 
 export const TABLE_DATA_TYPE = {
-    NUMBER: 'TABLE_DATA_TYPE:NUMBER',
-    STRING: 'TABLE_DATA_TYPE:STRING',
-    DATE: 'TABLE_DATA_TYPE:DATE',
-    BOOLEAN: 'TABLE_DATA_TYPE:BOOLEAN',
+    NUMBER:     'TABLE_DATA_TYPE:NUMBER',
+    STRING:     'TABLE_DATA_TYPE:STRING',
+    DATE:       'TABLE_DATA_TYPE:DATE',
+    BOOLEAN:    'TABLE_DATA_TYPE:BOOLEAN',
 }
+
+const pageSizes = [
+    ,{value:5,      label:'5'}
+    ,{value:10,     label:'10'}
+    ,{value:50,     label:'50'}
+    ,{value:100,    label:'100'}
+    ,{value:1000,   label:'1000'}
+    ,{value:-1,     label:'Todas'}
+]
 
 const addCheckbox = (headers, rows)=>{
     headers.unshift({key:'', label:'selector',align:'center', width:'5rem', isKey:false});
@@ -68,7 +77,7 @@ const getPaginationLastRow = (pageSize, currentPage) => {
 }
 
 const getMaxPage = (rowsLength, pageSize)=>{
-    const value = parseInt(rowsLength / pageSize);
+    let value = parseInt(rowsLength / pageSize);
     rowsLength % pageSize > 0 ? value ++ : 0;
     return value
 }
@@ -146,10 +155,47 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
         setSortColumnKey(newSortKey);
         setSortColumnOrder(newSortOrder);
         sortRows(rowsState, headersState, newSortKey,newSortOrder);
-        setRowsState((current)=>{
-            return current//sortRows(rowsState, headersState, newSortKey,newSortOrder);
-        })
+        setRowsState((current)=>{ return current});
     };
+
+    const onPageSizeSelectorChange = (e)=>{
+        const pageSizeValue = e.target.value === '-1'? rowsState.length : e.target.value;
+        console.log('onPageSizeSelectorChange()',{
+            ...paginationData,
+            current: 1,
+            size: pageSizeValue,
+            maxPage:  getMaxPage(rowsState.length, pageSizeValue),
+            firstrow: getPaginationInitialRow(pageSizeValue,1),
+            lastRow: getPaginationLastRow(pageSizeValue,1),
+         })
+
+        setPaginationData((currentPaginationData)=>{
+
+            return {
+                ...currentPaginationData,
+                current: 1,
+                size: pageSizeValue,
+                maxPage:  getMaxPage(rowsState.length, pageSizeValue),
+                firstrow: getPaginationInitialRow(pageSizeValue,1),
+                lastRow: getPaginationLastRow(pageSizeValue,1),
+             }
+             
+        });
+    }
+
+    const onPageSelectorChange = (e)=>{
+        const pageNumberValue = e.target.value;
+        setPaginationData((currentPaginationData)=>{
+            return {
+                ...currentPaginationData,
+                current: pageNumberValue,
+                size: currentPaginationData.size,
+                maxPage:  getMaxPage(rowsCopy.length, currentPaginationData.size),
+                firstrow: getPaginationInitialRow(currentPaginationData.size,pageNumberValue),
+                lastRow: getPaginationLastRow(currentPaginationData.size,pageNumberValue),
+             }
+        });
+    }
 
     console.log('rendering',{headersState,rowsState,sortColumnKey, sortColumnOrder,paginationData})
 
@@ -209,22 +255,23 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
    
             }
             <section>
-                <label htmlFor="pageSelector">Pagina</label>
-                <select name="pageSelector" id='pageSelector'>
+                <label>{paginationData.firstrow+1} - {paginationData.lastRow+1 > rowsState.length ? rowsState.length : paginationData.lastRow+1} de {rowsState.length} registros</label>
+                <label htmlFor="pageSelector"> Página :</label>
+                <select name="pageSelector" id='pageSelector' onChange={onPageSelectorChange} defaultValue={1}>
                     {
-                        [...Array(paginationData.maxPage)].map((_, i) => i + 1)
-                        .map(i => <option key={i} value={i} selected={i==0? true : false}>{i}</option>)
+                        [...Array(paginationData.maxPage)].map((_, i) => {return  {key:(i+1).toString(), value:(i + 1), label:(i+1).toString()}})
+                        .map(i => <option key={i.key} value={i.value} >{i.label}</option>)
                     }
                 </select>
+                <label> / {paginationData.maxPage}</label>
+                <label htmlFor="pageSizeSelector"> Registros por página :</label>
 
-                <label htmlFor="pageSizeSelector">Registros por pagina</label>
-
-                <select name="pageSizeSelector" id='pageSizeSelector'>
-                    <option value="10">10</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="1000">100</option>
-                    <option value="ALL">Todas</option>
+                <select name="pageSizeSelector" id='pageSizeSelector' onChange={onPageSizeSelectorChange} defaultValue={paginationData.size}>
+                    {
+                        pageSizes.map(size=>{
+                            return <option key={size.value} value={size.value} >{size.label}</option>
+                        })
+                    }
                 </select>
             </section>
         </div>
