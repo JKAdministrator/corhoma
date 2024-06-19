@@ -1,0 +1,36 @@
+.app-error-list {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    max-height: 100vh;
+    overflow: auto;
+    justify-content: flex-start;
+}
+
+.app-error-list li {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 30vw;
+    height: max-content;
+    padding: 0.5rem;
+    background-color: #580101;
+    border-radius: 3px;
+    margin: 0rem 1rem 1rem 0rem;
+    text-align: left;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    font-size: 0.8rem;
+    color: #ffbdbd;
+   
+}
+
+
+.app-error-list button {
+    margin-left: auto;
+    background-color: transparent;
+}

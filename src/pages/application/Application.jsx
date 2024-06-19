@@ -1,20 +1,28 @@
-import React from 'react'
+import React, { lazy,  Suspense} from 'react'
 import { Routes, Route } from 'react-router-dom'
-import FormularioLegal from './pages/formularioLegal/FormularioLegal'
-import Tablas from './pages/tablas/Tablas'
 import AppHeader from '../../components/appHeader/AppHeader.jsx'
+import PageLoading from '../../components/pageLoading/PageLoading.jsx'
 
 
-const FORMULARIO_LEGAL = ()=> {return <FormularioLegal />}
-const TABLAS = ()=> {return <Tablas />}
+const TABLAS = lazy(() => import(/* webpackChunkName: "CardSection" */ './pages/tablas/Tablas.jsx'));
+const FORMULARIO_LEGAL = lazy(() => import(/* webpackChunkName: "CardSection" */ './pages/formularioLegal/FormularioLegal.jsx'));
+
 
 function Application() {
   return (
     <>
       <AppHeader></AppHeader>
       <Routes>
-        <Route path='formularioLegal/*' element={<FORMULARIO_LEGAL />} />
-        <Route path='tablas' element={<TABLAS />} />
+        <Route path='Sw3AdmLegales/*' element={
+            <Suspense fallback={<PageLoading />}>
+              <FORMULARIO_LEGAL />
+            </Suspense>
+          } />
+        <Route path='Sw3AdmTablas' element={
+          <Suspense fallback={<PageLoading />}>
+            <TABLAS />
+          </Suspense>
+        } />
       </Routes>
     </>
   )

@@ -8,7 +8,7 @@ const DropdownMenu = () => {
     <div className="app-header-dropdown-menu">
       <ul>
         <li>
-          <Link to='./formularioLegal/busqueda'>
+          <Link to='./Sw3AdmLegales/busqueda'>
             <div className="image-container">
               <img src={logoFormularioLegal} alt="Logo de aplicación" />
             </div>
@@ -19,7 +19,7 @@ const DropdownMenu = () => {
         </li>
         <li className="divider"></li>
         <li>
-          <Link to='./tablas'>
+          <Link to='./Sw3AdmTablas'>
           <>
             <div className="image-container">
               <img src={logoTablas} alt="Logo de aplicación" />

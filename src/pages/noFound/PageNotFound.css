@@ -1,0 +1,26 @@
+form.page-not-found{
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+form.page-not-found h1 {
+    font-size: 7rem;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
+
+form.page-not-found h2 {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.808);
+}
