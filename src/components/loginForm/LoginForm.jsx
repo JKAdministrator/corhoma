@@ -37,7 +37,7 @@ const loginToApp = async (appCode, username, password)=>{
     const response = await fetch(url,initData);
     const responseJson = await response.json(); 
     if(!responseJson ) throw new Error('No responseJson found')
-    if(Number(responseJson.COD) != 200) throw new Error(`[rsp_cod:${responseJson.DAT[0].rsp_cod}] :: rsp_dat:${responseJson.DAT[0].rsp_dat}`)
+    if(responseJson?.COD?.toString() != '200') throw new Error(`[rsp_cod:${responseJson.DAT[0].rsp_cod}] :: rsp_dat:${responseJson.DAT[0].rsp_dat}`)
 
     const SUPCValues = Object.values(responseJson.SUPC)
     const SUPC =  Object.keys(responseJson.SUPC).map((key, index)=>{
@@ -46,7 +46,7 @@ const loginToApp = async (appCode, username, password)=>{
 
     return {
       SUPC: SUPC, 
-      SEID: responseJson.SUPC,
+      SUPC2: responseJson.SUPC,
       SUID: responseJson.SUID,
       SEID: responseJson.SEID,
       SSTC: responseJson.SSTC,
@@ -88,8 +88,6 @@ function LoginForm() {
       addError(e.toString());
       setTryingLogin(false);
     }
-
-    //navigate('/app/formularioLegal/busqueda')
   }
   return (
     <form className={`login-form ${loading ? 'animated-background' : ''}`}>

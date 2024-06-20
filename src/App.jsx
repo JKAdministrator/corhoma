@@ -4,7 +4,7 @@ import {Route, Routes, useNavigate} from 'react-router-dom'
 import 'font-awesome/css/font-awesome.min.css';
 import AppErrorList from './components/appErrorList/AppErrorList.jsx';
 import React, { lazy,  Suspense, useEffect, useState } from 'react';
-import { useAppContext } from './AppContext.jsx';
+import { useAppContext } from './AppContext.jsx'; 
 import PageLoading from './components/pageLoading/PageLoading.jsx';
 import PageNotFound from './pages/noFound/PageNotFound.jsx';
 

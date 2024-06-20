@@ -65,7 +65,6 @@ const sortRows = (rows, headers, sortColumnKey, sortColumnOrder )=>{
             return sortColumnOrder === TABLE_SORT_ORDER.ASC ? -1 : 1
         }
     });
-    console.log('sortRows()',{index, rows, headers, sortColumnKey, sortColumnOrder})
     return rows
 }
 
@@ -113,8 +112,7 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
         if (isFirstRender.current) {
             isFirstRender.current = false; // Cambiamos la bandera después de la primera renderización
             return; // No ejecutamos el efecto en la primera renderización
-        } 
-        console.log('useEffect() called')
+        }
         let allSelected = false;
         if(isMultiRowSelectable){
             allSelected = rowsState.reduce((valorAnterior, valorActual, indice, vector)=>{
@@ -126,8 +124,6 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
     },[null,rowsState])
 
     const onChangeSelectAll = (e)=>{
-        
-        console.log('onChangeSelectAll() called ')
         let newValue = e.target.checked;
         setRowsState((currentRowStateData)=>{
             let newData = currentRowStateData.map(row=>{
@@ -137,7 +133,6 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
         })
     }
     const onChangeSelectOne = (e)=>{
-        console.log('onChangeSelectOne() called ')
         let newValue = e.target.checked;
         let dataId = e.target.parentNode.parentNode.dataset.id 
         setRowsState((currentRowStateData)=>{
@@ -149,7 +144,6 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
     }
 
     const onSortColumnMouseDown = (e) => {
-        console.log('onSortColumnMouseDown() called ',{target: e.target})
         const newSortKey = e.target.parentNode.dataset.key;
         const newSortOrder = sortColumnOrder === TABLE_SORT_ORDER.ASC ? TABLE_SORT_ORDER.DESC : TABLE_SORT_ORDER.ASC;
         setSortColumnKey(newSortKey);
@@ -160,17 +154,7 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
 
     const onPageSizeSelectorChange = (e)=>{
         const pageSizeValue = e.target.value === '-1'? rowsState.length : e.target.value;
-        console.log('onPageSizeSelectorChange()',{
-            ...paginationData,
-            current: 1,
-            size: pageSizeValue,
-            maxPage:  getMaxPage(rowsState.length, pageSizeValue),
-            firstrow: getPaginationInitialRow(pageSizeValue,1),
-            lastRow: getPaginationLastRow(pageSizeValue,1),
-         })
-
         setPaginationData((currentPaginationData)=>{
-
             return {
                 ...currentPaginationData,
                 current: 1,
@@ -179,7 +163,6 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
                 firstrow: getPaginationInitialRow(pageSizeValue,1),
                 lastRow: getPaginationLastRow(pageSizeValue,1),
              }
-             
         });
     }
 
@@ -197,13 +180,10 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
         });
     }
 
-    console.log('rendering',{headersState,rowsState,sortColumnKey, sortColumnOrder,paginationData})
-
-
     return (
-        <div className='app-table'>
+        <div className={`app-table ${isTableLoading && 'animated-background'}`}>
         {
-            title ? <h1>{title}</h1> : <></>
+            !isTableLoading && title ? <h1>{title}</h1> : <></>
         }
             {
                 !isTableLoading && 
@@ -254,6 +234,7 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
                 </table>
    
             }
+            {!isTableLoading && 
             <section>
                 <label>{paginationData.firstrow+1} - {paginationData.lastRow+1 > rowsState.length ? rowsState.length : paginationData.lastRow+1} de {rowsState.length} registros</label>
                 <label htmlFor="pageSelector"> Página :</label>
@@ -274,6 +255,7 @@ function AppTable({isLoading, title, headers, rows,isMultiRowSelectable, default
                     }
                 </select>
             </section>
+            }
         </div>
     )
 }

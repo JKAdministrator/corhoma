@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), 'module:@preact/signals-react-transform'],
   server: {
     port: 10180,
     hmr: {

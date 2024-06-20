@@ -1,0 +1,50 @@
+ul.app-menu{
+    min-width: 1rem;
+    width: max-content;
+    background-color: white;
+    height: calc(100vh - 0.2rem);
+    position: absolute;
+    z-index: 1;
+    border-right: 1px solid  rgba(0, 0, 0, 0.3);
+    display: flex !important;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+}
+ul.app-menu button{
+    border: none;
+    background-color: transparent;
+    border-radius: 0;
+    width: 100%;
+    color: black;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+ul.app-menu button:focus {
+    outline: none;
+}
+
+ul.app-menu button:focus-visible {
+    outline: none;
+}
+
+ul.app-menu li {
+    width: 100%;
+}
+
+ul.app-menu ul:not(.open){
+    display: none;
+}
+ul.app-menu li.depth-0:nth-child(1) {
+    margin-top: 1rem;
+}
+ul.app-menu li.depth-1          { background-color: rgb(0, 0, 0, 0.06);}
+ul.app-menu li.depth-1 > button { margin-left:      0.5rem};
+
+ul.app-menu li.depth-2          { background-color: rgb(0, 0, 0, 0.9);}
+ul.app-menu li.depth-2 > button { margin-left:      0.9rem};
+
+ul.app-menu li.depth-3          { background-color: rgb(0, 0, 0, 0.12);}
+ul.app-menu li.depth-3 > button { margin-left:      1.2rem};
