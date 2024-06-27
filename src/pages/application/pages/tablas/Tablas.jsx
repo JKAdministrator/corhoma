@@ -78,39 +78,31 @@ const tablaDePrueba = ()=>{
 }
 
 
-const obtenerDatosDeTabla = async (tableName, appCode)=>{
+const obtenerDatosDeTabla = async (tableName)=>{
   try{
-
     const abortController = new AbortController();
-    const url = 'https://172.16.0.5:10180/Sw3WebApps_v.3.7.5_DESA_BSJ/Sw3AdmTablas/ajax/Sw3AdmTablas_GetTbl_v2.php';
-    const body = JSON.stringify({
-      appNAME: appCode,
-      tblNAME: tableName,
-    })
-    const method = 'POST'
+    const url = `https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/Sw3Commons/Sw3_getTable.php?tabla=${tableName}`;
+    const method = 'GET'
     const headers = {
       "Content-type": "application/json; charset=UTF-8",
     }
     const initData = {
       method: method,
-      body: body,
       headers: headers,
       signal: abortController?.signal
     }
-    console.log('Enviando Datos a WS ',{datos:initData})
+    console.log('Enviando Datos a WS ',{url, datos:initData})
     const response = await fetch(url,initData);
     const responseJson = await response.json(); 
     if(!responseJson ) throw new Error('No responseJson found')
+    console.log({responseJson})
     if(responseJson.COD.toString() != '200') {
       throw new Error(`[COD:${responseJson.COD}] :: [DAT:${responseJson.MSG[0]}]`)
     }
     return responseJson;
   } catch(e){
-    
     throw `[Tablas] :: [obtenerDatosDeTabla()] :: ${e.toString()}`;  
-
   }
-  return null;
 }
 
 function Tablas() {
@@ -133,7 +125,7 @@ function Tablas() {
 
   useEffect(()=>{
     if(currentTable) {
-      obtenerDatosDeTabla(currentTable, user.currentApp).then(
+      obtenerDatosDeTabla(currentTable).then(
         (e)=>{
           console.log(`Tabla cargada ok ${currentTable}`)
           setIsLoadingData(false);
