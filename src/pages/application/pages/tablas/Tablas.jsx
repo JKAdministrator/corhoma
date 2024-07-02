@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import AppTable, {TABLE_SORT_ORDER, TABLE_DATA_TYPE, TABLE_PAGE_SIZES} from '../../../../components/appTable/AppTable';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import './Tablas.css'
+import { effect, useSignalEffect } from "@preact/signals-react";
 import AppMenu, {SIGNAL_SELECTED_APP_MENU_OPTION_CODE} from '../../../../components/appMenu/AppMenu.jsx'
 import { useAppContext } from '../../../../AppContext.jsx'
-import { effect, useSignalEffect } from "@preact/signals-react";
 
 import API from '../../../../api/Api.jsx';
 const appMenu = ()=>{
