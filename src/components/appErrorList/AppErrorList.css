@@ -16,6 +16,7 @@
     align-items: flex-start;
     justify-content: center;
     width: 30vw;
+    min-width: min-content;
     height: max-content;
     padding: 0.5rem;
     background-color: #580101;

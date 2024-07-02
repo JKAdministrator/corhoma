@@ -1,6 +1,6 @@
 ul.app-menu{
     min-width: 1rem;
-    width: max-content;
+    width: 14rem;
     background-color: white;
     height: calc(100vh - 0.2rem);
     position: absolute;
@@ -11,12 +11,14 @@ ul.app-menu{
     align-items: flex-start;
     justify-content: flex-start;
     overflow: auto;
+    position: relative;
 }
 ul.app-menu button{
     border: none;
     background-color: transparent;
     border-radius: 0;
-    width: 100%;
+    width: calc(100% - 1rem);
+    padding: 0.5rem;
     color: black;
     font-size: 0.9rem;
     text-align: left;

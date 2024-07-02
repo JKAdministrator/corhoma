@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import './LoginForm.css'
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../AppContext';
+import API from '../../api/Api.jsx';
 
 const loadConfigJson = async ()=>{
   const response = await fetch('/config/webServicesConfig.json',{headers:{
@@ -11,37 +12,20 @@ const loadConfigJson = async ()=>{
 }
 
 const loginToApp = async (username, password)=>{
-  try{
-
-    const abortController = new AbortController();
-    const url = 'https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/Sw3Commons/Sw3_login.php';
-    const body = JSON.stringify({
-      username:     username,
-      password:     password
-    })
-    const method = 'POST'
-    const headers = {
-      "Content-type": "application/json; charset=UTF-8",
-    }
-    const initData = {
-      method: method,
-      body: body,
-      headers: headers,
-      signal: abortController?.signal
-    }
-    const response = await fetch(url,initData);
-    const responseJson = await response.json(); 
-    if(!responseJson ) throw new Error('No responseJson found')
-    if(responseJson.cod != '200') throw new Error(`[${responseJson.cod}] :: ${responseJson.err}`)
-    return responseJson.dat;
+  try {
+    console.log('calling loginToApp',{username, password});
+    const response = await API.auth.login(username, password);
+    console.log('calling loginToApp end');
+    if(response.cod !== '200') throw new Error(response.err);
+    return response.dat;
   } catch(e){
-    throw `[LoginForm] :: [loginToApp()] :: ${e.toString()}`;  
+    throw `${e.toString()}`;  
   }
 }
 
 
 function LoginForm() {
-  const {setUser, addError} = useAppContext();
+  const {addError, login } = useAppContext();
   const [loading, setLoading] = useState(true);
   const [tryingLogin, setTryingLogin] = useState(false);
   const [username, setUsername] = useState('USRADMIN')
@@ -57,9 +41,8 @@ function LoginForm() {
     setTryingLogin(true);
     try {
       const loginResponse = await loginToApp(username, password);
-      console.log('loginResponse',{loginResponse})
-      setUser({loginResponse, currentApp:'lication'});
-    }catch(e){
+      login(loginResponse.token, loginResponse.refreshToken);
+     }catch(e){
       addError(e.toString());
       setTryingLogin(false);
     }

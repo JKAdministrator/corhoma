@@ -3,7 +3,13 @@ import './DropdownMenu.css'
 import logoFormularioLegal from '../../../assets/appIcons/formularioLegal.jpg'
 import logoTablas from '../../../assets/appIcons/tablas.jpg'
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../../AppContext";
 const DropdownMenu = () => {
+  
+  const {logout} = useAppContext();
+  const onLogoutHandle = (e)=>{
+    logout();
+  }
   return (
     <div className="app-header-dropdown-menu">
       <ul>
@@ -29,6 +35,13 @@ const DropdownMenu = () => {
             </label>
           </>
           </Link>
+        </li>
+        <li>
+        <Link onClick={onLogoutHandle}>
+        <label>
+              Logout
+            </label>
+        </Link>
         </li>
       </ul>
     </div>
