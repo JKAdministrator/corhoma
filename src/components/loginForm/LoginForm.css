@@ -59,3 +59,7 @@
     padding: 0.8rem 0.4rem !important;
     cursor: pointer;
 }
+
+.login-form.loading * {
+    opacity: 0 !important;
+}

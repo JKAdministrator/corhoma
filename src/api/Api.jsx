@@ -4,8 +4,6 @@ import axios from 'axios';
 
 
 
-
-
 // Función para crear una instancia de Axios con interceptores
 const createApiClient = (baseURL) => {
     const apiClient = axios.create({
@@ -18,11 +16,8 @@ const createApiClient = (baseURL) => {
     // Interceptor para agregar el token JWT a cada solicitud
     apiClient.interceptors.request.use((config) => {
         const token = localStorage.getItem('accessToken');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        console.log('apiClient.interceptors.request',{config})
-        if(config.url=='/Sw3_auth_refresh.php'){
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+        if(config.url==servicesData.AUTH.methods.REFRESH){ //  '/Sw3_auth_refresh.php'){
             config.headers.grant_type = `refresh_token`;
             config.headers.refresh_token = localStorage.getItem('refreshToken');    
         }
@@ -36,7 +31,6 @@ const createApiClient = (baseURL) => {
   
     // Interceptor para manejar respuestas de error
     apiClient.interceptors.response.use(async (response) => {
-        console.log('interceptor response ',{response});
         const originalRequest = response.config;
         if (response.data.cod === '401' && !originalRequest._retry) {
             originalRequest._retry = true;
@@ -56,18 +50,19 @@ const createApiClient = (baseURL) => {
     return apiClient;
 };
 
-const appApiClient = createApiClient('https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/Sw3Commons');
+const API_AUTH = createApiClient(`${servicesData.AUTH.baseUrl}`);//'https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/Sw3Commons');
+const API_ADM_TABLAS = createApiClient(`${servicesData.ADM_TABLAS.baseUrl}`);//'https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/Sw3Commons');
 
 const admTablas = {
     getTable: async (tableCode)=>{
-        const response = await appApiClient.get(`/Sw3_admTablas_getTable.php?tabla=${tableCode}`);
+        const response = await API_ADM_TABLAS.get(`/Sw3_admTablas_getTable.php?tabla=${tableCode}`);
         return response.data;
     }
 };
 
 const auth = {
     login: async (username, password)=>{
-        const response = await appApiClient.post(`/Sw3_auth_login.php`,{
+        const response = await API_AUTH.post(`/Sw3_auth_login.php`,{
             username:     username,
             password:     password
         });
@@ -77,7 +72,7 @@ const auth = {
         try {
             const accessToken = localStorage.getItem('accessToken');
             const refrehToken = localStorage.getItem('refreshToken');
-            const response = await appApiClient.post(`/Sw3_auth_refresh.php`, {
+            const response = await API_AUTH.post(`/Sw3_auth_refresh.php`, {
               Authorization: `Bearer ${accessToken}`
             });
             if(response.data.cod != '200') throw response.data.err;
@@ -87,10 +82,11 @@ const auth = {
           } catch (error) {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
+            window.location.href = `${import.meta.env.VITE_APP_PATH}login`;
             //console.error('refreshToken() Error al obtener un nuevo token:', error);
             throw error;
           }
+          
     }
 };
 

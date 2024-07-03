@@ -23,6 +23,11 @@ function Application() {
             <TABLAS />
           </Suspense>
         } />
+        <Route path='Sw3AdmTablas/:id' element={
+          <Suspense fallback={<PageLoading />}>
+            <TABLAS />
+          </Suspense>
+        } />
       </Routes>
     </>
   )

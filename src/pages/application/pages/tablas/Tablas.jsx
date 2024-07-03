@@ -5,8 +5,10 @@ import './Tablas.css'
 import { effect, useSignalEffect } from "@preact/signals-react";
 import AppMenu, {SIGNAL_SELECTED_APP_MENU_OPTION_CODE} from '../../../../components/appMenu/AppMenu.jsx'
 import { useAppContext } from '../../../../AppContext.jsx'
+import { useNavigate, useParams} from 'react-router-dom';
 
-import API from '../../../../api/Api.jsx';
+
+
 const appMenu = ()=>{
   return [
       {
@@ -47,60 +49,54 @@ const appMenu = ()=>{
 }
 
 
-const obtenerDatosDeTabla = async (tableName)=>{
-  try{
-    const respuesta = await API.admTablas.getTable(tableName);
-    console.log('obtenerDatosDeTabla ',{respuesta})
-    return respuesta;
-  } catch(e){
-    throw `[Tablas] :: [obtenerDatosDeTabla()] :: ${e.toString()}`;  
-  }
-}
-
 function Tablas() {
-  const {addError, user, getTokens} = useAppContext();
-  const [currentTable,  setCurrentTable] = useState(undefined);
+  const {addError, getTokens, API_ADM_TABLAS} = useAppContext();
+  const { id } = useParams();
+  const [currentTable,  setCurrentTable] = useState(null);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [tableWebServiceResponse,  setTableWebServiceResponse] = useState(undefined);
-
-  const menu = appMenu()
+  const navigate = useNavigate();
+  const menu = appMenu();
 
   useSignalEffect(()=>{
-    console.log(`SIGNAL_SELECTED_APP_MENU_OPTION_CODE changed to ${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`)
-    setIsLoadingData(true);
-    setCurrentTable(SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value)
+    console.log(`SIGNAL_SELECTED_APP_MENU_OPTION_CODE changed to ${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`);
+    if(SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value) navigate(`/app/Sw3AdmTablas/${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`);
   })
 
   effect(()=>{
     //setIsLoadingData(true);
   });
 
-  useEffect(()=>{
-    if(currentTable) {
-      let { jwtAccessToken, jwtRefreshToken } = getTokens();
+  if(id !== currentTable) setCurrentTable(id);
 
-      obtenerDatosDeTabla(currentTable, jwtAccessToken).then(
-        (respuesta)=>{
-          if(respuesta.cod != '200') {
-            addError(respuesta.err.toString());
-            setIsLoadingData(true);
-          } else {
-            const headers = respuesta.dat.metadata.headers.map((header)=>{return {label:'?', key:'?', dataType:TABLE_DATA_TYPE.STRING, isKey:false, sortable:false ,alig:'center', width:'7rem', ...header} });
-            headers[(headers.length -1)].width = '1fr';
-            const rows = respuesta.dat.rows;
-            const title = `${respuesta.dat.metadata.title}` ;
-            setTableWebServiceResponse({headers, rows, title});
-            setIsLoadingData(false);
-          }
+useEffect(()=>{
+
+  if(currentTable){
+    API_ADM_TABLAS.getTable(currentTable).then(
+      (respuesta)=>{
+        console.log('API_ADM_TABLAS.getTable=',{respuesta})
+        if(respuesta.cod != '200') {
+          addError(respuesta.err.toString());
+          setIsLoadingData(true);
+        } else {
+          const headers = respuesta.dat.metadata.headers.map((header)=>{return {label:'?', key:'?', dataType:TABLE_DATA_TYPE.STRING, isKey:false, sortable:false ,alig:'center', width:'7rem', ...header} });
+          headers[(headers.length -1)].width = '1fr';
+          const rows = respuesta.dat.rows;
+          const title = `${respuesta.dat.metadata.title}` ;
+          setTableWebServiceResponse({headers, rows, title});
+          setIsLoadingData(false);
         }
-      ).catch(e=>{
-        addError(e.toString());
-        console.log(`Tabla cargada error`);
-        setIsLoadingData(true);
-      });
-    }
-  },[currentTable]);
+      }
+    ).catch(e=>{
+      addError(e.toString());
+      console.log(`Tabla cargada error`);
+      setIsLoadingData(true);
+    });
+  }
 
+
+},[currentTable])
+  
   
   return (
     <>

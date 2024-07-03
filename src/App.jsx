@@ -9,25 +9,35 @@ import PageLoading from './components/pageLoading/PageLoading.jsx';
 import PageNotFound from './pages/noFound/PageNotFound.jsx';
 import ProtectedRoute from '../ProtectedRoute.jsx';
 
+
 const LOGIN = lazy(() => import('./pages/login/PageLogin.jsx'));
 const APPLICATION = lazy(() => import('./pages/application/Application.jsx'));
 
+console.log('VARIABLES DE AMBIENTE (ENV)',{VITE_APP_PATH:import.meta.env.VITE_APP_PATH});
+
 function App() {
 
-  const {user, trySetUserFromCurrentTokens} = useAppContext();
+  const {user, loading, trySetUserFromCurrentTokens} = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
+  const [apiDataReady, setApiDataReady] = useState(false);
 
   useEffect(()=>{
     if(user){
       navigate(`/app/Sw3AdmTablas`);
     } 
-  },[user])
+  },[user]);
 
-  return (
-     <>
+  useEffect(()=>{
+    console.log('loading change now is',loading)
+    setApiDataReady(!loading);
+  },[loading])
+
+  if(!apiDataReady) return  <label htmlFor="">loading</label>
+  return ( 
+      <>
       <Routes>
-        <Route path='/' element={
+        <Route path='/*' element={
           <Suspense fallback={<PageLoading />}>
               <LOGIN />
           </Suspense>
@@ -48,7 +58,7 @@ function App() {
       </Routes>
       <AppErrorList />
      </>
-  )
+    )
 }
 
 export default App

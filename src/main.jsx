@@ -7,7 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import AppContextProvider from './AppContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <BrowserRouter basename={`${import.meta.env.VITE_APP_PATH}`}>
     <AppContextProvider>
       <App />
     </AppContextProvider>
