@@ -1,8 +1,13 @@
 import axios from 'axios';
 
-const response      = await fetch(`${import.meta.env.VITE_APP_PATH}/config/webServicesConfig.json`);
-if (!response.ok)   throw new Error('Error al cargar el archivo webServicesConfig.json');
-const jsonData      = await response.json();
+
+let jsonData;
+const response      = fetch(`${import.meta.env.VITE_APP_PATH}/config/webServicesConfig.json`).then(async (response)=>{
+    if (!response.ok) throw new Error('Error al cargar el archivo webServicesConfig.json');
+    jsonData      = await response.json();
+}).catch((e)=>{
+    throw new Error(e);
+})
 
 const requestInterceptorSuccess = (config) => {
     const token = localStorage.getItem('accessToken');
