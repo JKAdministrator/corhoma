@@ -8,7 +8,8 @@ import { useAppContext } from './AppContext.jsx';
 import PageLoading from './components/pageLoading/PageLoading.jsx';
 import PageNotFound from './pages/noFound/PageNotFound.jsx';
 import ProtectedRoute from '../ProtectedRoute.jsx';
-
+import AppPrivateContextProvider from './apiContexts/ApiPrivateContext.jsx';
+import AppPublicContextProvider from './apiContexts/ApiPublicContext.jsx';
 
 const LOGIN = lazy(() => import('./pages/login/PageLogin.jsx'));
 const APPLICATION = lazy(() => import('./pages/application/Application.jsx'));
@@ -17,7 +18,7 @@ console.log('VARIABLES DE AMBIENTE (ENV)',{VITE_APP_PATH:import.meta.env.VITE_AP
 
 function App() {
 
-  const {user, loading, trySetUserFromCurrentTokens} = useAppContext();
+  const {user, loading} = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
   const [apiDataReady, setApiDataReady] = useState(false);
@@ -36,7 +37,8 @@ function App() {
   if(!apiDataReady) return  <label htmlFor="">loading</label>
   return ( 
       <>
-      <Routes>
+      <AppPublicContextProvider>
+        <Routes>    
         <Route path='/*' element={
           <Suspense fallback={<PageLoading />}>
               <LOGIN />
@@ -47,15 +49,18 @@ function App() {
             <LOGIN />
           </Suspense>
         } />
-        <Route path='/app/*' element={
+      <Route path='/app/*' element={
           <Suspense fallback={<PageLoading />}>
             <ProtectedRoute>
+            <AppPrivateContextProvider>
               <APPLICATION />
+            </AppPrivateContextProvider>
             </ProtectedRoute>
           </Suspense>
         } />
         <Route path='*' element={<PageNotFound />} />
       </Routes>
+      </AppPublicContextProvider>
       <AppErrorList />
      </>
     )

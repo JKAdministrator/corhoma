@@ -5,6 +5,7 @@ import './Tablas.css'
 import { effect, useSignalEffect } from "@preact/signals-react";
 import AppMenu, {SIGNAL_SELECTED_APP_MENU_OPTION_CODE} from '../../../../components/appMenu/AppMenu.jsx'
 import { useAppContext } from '../../../../AppContext.jsx'
+import { useApiPrivateContext  } from '../../../../apiContexts/ApiPrivateContext.jsx'
 import { useNavigate, useParams} from 'react-router-dom';
 
 
@@ -50,7 +51,10 @@ const appMenu = ()=>{
 
 
 function Tablas() {
-  const {addError, getTokens, API_ADM_TABLAS} = useAppContext();
+  const {addError, getTokens} = useAppContext();
+  const { loading, API_ADM_TABLAS} = useApiPrivateContext();
+  const [ loadingComponent, setLoadingComponent]  = useState(true);
+
   const { id } = useParams();
   const [currentTable,  setCurrentTable] = useState(null);
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -63,39 +67,38 @@ function Tablas() {
     if(SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value) navigate(`/app/Sw3AdmTablas/${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`);
   })
 
-  effect(()=>{
-    //setIsLoadingData(true);
-  });
+  useEffect(()=>{
+    console.log('Tablas useEffect() ',{loading, API_ADM_TABLAS});
+    if(!loading) setLoadingComponent(false);
+  },[loading]);
 
   if(id !== currentTable) setCurrentTable(id);
 
-useEffect(()=>{
-
-  if(currentTable){
-    API_ADM_TABLAS.getTable(currentTable).then(
-      (respuesta)=>{
-        console.log('API_ADM_TABLAS.getTable=',{respuesta})
-        if(respuesta.cod != '200') {
-          addError(respuesta.err.toString());
-          setIsLoadingData(true);
-        } else {
-          const headers = respuesta.dat.metadata.headers.map((header)=>{return {label:'?', key:'?', dataType:TABLE_DATA_TYPE.STRING, isKey:false, sortable:false ,alig:'center', width:'7rem', ...header} });
-          headers[(headers.length -1)].width = '1fr';
-          const rows = respuesta.dat.rows;
-          const title = `${respuesta.dat.metadata.title}` ;
-          setTableWebServiceResponse({headers, rows, title});
-          setIsLoadingData(false);
+  useEffect(()=>{
+    if(currentTable && !loadingComponent){
+      console.log('API_ADM_TABLAS',{API_ADM_TABLAS})
+      API_ADM_TABLAS.getTable(currentTable).then(
+        (respuesta)=>{
+          console.log('API_ADM_TABLAS.getTable=',{respuesta})
+          if(respuesta.cod != '200') {
+            addError(respuesta.err.toString());
+            setIsLoadingData(true);
+          } else {
+            const headers = respuesta.dat.metadata.headers.map((header)=>{return {label:'?', key:'?', dataType:TABLE_DATA_TYPE.STRING, isKey:false, sortable:false ,alig:'center', width:'7rem', ...header} });
+            headers[(headers.length -1)].width = '1fr';
+            const rows = respuesta.dat.rows;
+            const title = `${respuesta.dat.metadata.title}` ;
+            setTableWebServiceResponse({headers, rows, title});
+            setIsLoadingData(false);
+          }
         }
-      }
-    ).catch(e=>{
-      addError(e.toString());
-      console.log(`Tabla cargada error`);
-      setIsLoadingData(true);
-    });
-  }
-
-
-},[currentTable])
+      ).catch(e=>{
+        addError(e.toString());
+        console.log(`Tabla cargada error`);
+        setIsLoadingData(true);
+      });
+    }
+  },[loadingComponent, currentTable])
   
   
   return (

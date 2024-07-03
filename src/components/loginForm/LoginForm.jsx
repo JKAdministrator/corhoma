@@ -1,27 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react'
-import './LoginForm.css'
-import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../../AppContext';
+import './LoginForm.css';
+import { useApiPublicContext } from '../../apiContexts/ApiPublicContext.jsx';
+import { useAppContext } from '../../AppContext.jsx';
 
 
 function LoginForm() {
-  const {addError, loading, API_AUTH, login } = useAppContext();
+  const { loading, API_AUTH }                     = useApiPublicContext();
+  const [ loadingComponent, setLoadingComponent]  = useState(true);
+
+  const {addError, login}             = useAppContext();
   const [tryingLogin, setTryingLogin] = useState(false);
-  const [username, setUsername] = useState('USRADMIN');
-  const [password, setPassword] = useState('FIRM01..');
+  const [username, setUsername]       = useState('USRADMIN');
+  const [password, setPassword]       = useState('FIRM01..');
+
   const handleLoginClick= async (e)=>{
-    setTryingLogin(true);
-    try {
-      console.log('handleLoginClick()',{loading, API_AUTH});
-      const loginResponse = await API_AUTH.login(username, password);
-      console.log('loginResponse',{loginResponse});
-      login(loginResponse.dat.token, loginResponse.dat.refreshToken);
-     }catch(e){
-      addError(e.toString());
-      setTryingLogin(false);
-    }
+      if(!loadingComponent){
+        try {
+          setTryingLogin(true);
+          console.log('handleLoginClick()',{loading, API_AUTH});
+          const loginResponse = await API_AUTH.login(username, password);
+          console.log('loginResponse',{loginResponse});
+          login(loginResponse.dat.token, loginResponse.dat.refreshToken);
+         }catch(e){
+          addError(e.toString());
+          setTryingLogin(false);
+        }    
+      }
   }
 
+  useEffect(()=>{
+    console.log('LoginForm useEffect() ',{loading, API_AUTH, loadingComponent});
+    if(!loading){
+      setLoadingComponent(false);
+    }
+  },[loading]);
 
   return <form className={`login-form`}>
       <div className='titles-container'>
