@@ -7,6 +7,7 @@ import AppMenu, {SIGNAL_SELECTED_APP_MENU_OPTION_CODE} from '../../../../compone
 import { useAppContext } from '../../../../AppContext.jsx'
 import { useApiPrivateContext  } from '../../../../apiContexts/ApiPrivateContext.jsx'
 import { useNavigate, useParams} from 'react-router-dom';
+import { useApiPublicContext } from '../../../../apiContexts/ApiPublicContext.jsx';
 
 
 
@@ -53,6 +54,7 @@ const appMenu = ()=>{
 function Tablas() {
   const {addError, getTokens} = useAppContext();
   const { loading, API_ADM_TABLAS} = useApiPrivateContext();
+  const { API_TEST } = useApiPublicContext();
   const [ loadingComponent, setLoadingComponent]  = useState(true);
 
   const { id } = useParams();
@@ -63,12 +65,10 @@ function Tablas() {
   const menu = appMenu();
 
   useSignalEffect(()=>{
-    console.log(`SIGNAL_SELECTED_APP_MENU_OPTION_CODE changed to ${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`);
     if(SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value) navigate(`/app/Sw3AdmTablas/${SIGNAL_SELECTED_APP_MENU_OPTION_CODE.value}`);
   })
 
   useEffect(()=>{
-    console.log('Tablas useEffect() ',{loading, API_ADM_TABLAS});
     if(!loading) setLoadingComponent(false);
   },[loading]);
 
@@ -76,10 +76,13 @@ function Tablas() {
 
   useEffect(()=>{
     if(currentTable && !loadingComponent){
-      console.log('API_ADM_TABLAS',{API_ADM_TABLAS})
+      /*API_TEST.test_config().then(testResponse=>{
+        console.log('testResponse [on PAGE TABLAS]',testResponse);
+      }).catch(e=>{
+        console.log('testResponse ERROR [on PAGE TABLAS]',testResponse);
+      })*/
       API_ADM_TABLAS.getTable(currentTable).then(
         (respuesta)=>{
-          console.log('API_ADM_TABLAS.getTable=',{respuesta})
           if(respuesta.cod != '200') {
             addError(respuesta.err.toString());
             setIsLoadingData(true);

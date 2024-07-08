@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import './LoginForm.css';
 import { useApiPublicContext } from '../../apiContexts/ApiPublicContext.jsx';
 import { useAppContext } from '../../AppContext.jsx';
-
+import axios from 'axios';
 
 function LoginForm() {
-  const { loading, API_AUTH }                     = useApiPublicContext();
+  const { loading, API_AUTH, API_TEST }                     = useApiPublicContext();
   const [ loadingComponent, setLoadingComponent]  = useState(true);
 
   const {addError, login}             = useAppContext();
@@ -17,10 +17,14 @@ function LoginForm() {
       if(!loadingComponent){
         try {
           setTryingLogin(true);
-          console.log('handleLoginClick()',{loading, API_AUTH});
-          const loginResponse = await API_AUTH.login(username, password);
-          console.log('loginResponse',{loginResponse});
-          login(loginResponse.dat.token, loginResponse.dat.refreshToken);
+         //const testResponse = await API_TEST.test_config();
+         //console.log('testResponse [on LOGIN FORM (1)]',testResponse);
+         //const testResponse2 = await API_TEST.test_config();
+         //console.log('testResponse [on LOGIN FORM (2)]',testResponse2);
+
+         const loginResponse = await API_AUTH.login(username, password);
+         login(loginResponse.dat.token, loginResponse.dat.refreshToken);
+         setTryingLogin(false);
          }catch(e){
           addError(e.toString());
           setTryingLogin(false);

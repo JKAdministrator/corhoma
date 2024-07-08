@@ -11,5 +11,12 @@
       "methods":{
         "GET_TABLE":"/Sw3_admTablas_getTable.php"
       }
+    },
+    "TEST":{
+      "baseUrl":"https://172.16.0.29:6051/Sw3WebApps_v.3.7.5_DESA_REACT/TestConfig",
+      "methods":{
+        "TEST_CONFIG":"/TestConfig.php"
+      }
     }
+
 }

@@ -38,7 +38,7 @@ function App() {
   return ( 
       <>
       <AppPublicContextProvider>
-        <Routes>    
+        <Routes>
         <Route path='/*' element={
           <Suspense fallback={<PageLoading />}>
               <LOGIN />

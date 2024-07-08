@@ -5,8 +5,8 @@ export const AppContext = createContext(null);
 
 
 export default function AppContextProvider({children}){
-    const [user, setUser] = useState(undefined);
-    const [errors, setErrors] = useState([]);
+    const [user, setUser]       = useState(undefined);
+    const [errors, setErrors]   = useState([]);
 
     const removeError = (codeToRemove)=>{
         setErrors((currentErrors)=>{

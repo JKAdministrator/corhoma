@@ -4,6 +4,7 @@ import logoFormularioLegal from '../../../assets/appIcons/formularioLegal.jpg'
 import logoTablas from '../../../assets/appIcons/tablas.jpg'
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../../AppContext";
+import DropdownMenuItem from './dropdownMenuItem/DropdownMenuItem.jsx';
 const DropdownMenu = () => {
   
   const {logout} = useAppContext();
@@ -13,35 +14,16 @@ const DropdownMenu = () => {
   return (
     <div className="app-header-dropdown-menu">
       <ul>
-        <li>
-          <Link to='./Sw3AdmLegales/busqueda'>
-            <div className="image-container">
-              <img src={logoFormularioLegal} alt="Logo de aplicación" />
-            </div>
-            <label>
-              Formulario Legal
-            </label>
-          </Link>
-        </li>
+        <DropdownMenuItem linkTo='./Sw3AdmLegales/busqueda' image={logoFormularioLegal}/>
+        <li className="divider"></li>
+        <DropdownMenuItem linkTo='./Sw3AdmTablas' image={logoTablas}/>
+        <li className="divider"></li>
+        <DropdownMenuItem linkTo='./Sw3AdmJson' image={logoFormularioLegal}/>
         <li className="divider"></li>
         <li>
-          <Link to='./Sw3AdmTablas'>
-          <>
-            <div className="image-container">
-              <img src={logoTablas} alt="Logo de aplicación" />
-            </div>
-            <label>
-              Tablas
-            </label>
-          </>
+          <Link onClick={onLogoutHandle}>
+            <label>Logout</label>
           </Link>
-        </li>
-        <li>
-        <Link onClick={onLogoutHandle}>
-        <label>
-              Logout
-            </label>
-        </Link>
         </li>
       </ul>
     </div>
